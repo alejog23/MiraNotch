@@ -2,7 +2,7 @@ name: Compilar APK de Prueba
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "principal" ]
   workflow_dispatch:
 
 jobs:
@@ -18,20 +18,18 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Reparar Gradle Wrapper Faltante
+      run: |
+        gradle wrapper --gradle-version 8.2
+
     - name: Configurar Gradle
       uses: gradle/actions/setup-gradle@v3
 
     - name: Dar permisos de ejecucion
-      run: chmod +x gradlew || true
+      run: chmod +x gradlew
 
     - name: Compilar APK con Gradle
-      run: gradle assembleDebug
-
-        if [ -f gradlew ]; then
-          ./gradlew assembleDebug
-        else
-          gradle assembleDebug
-        fi
+      run: ./gradlew assembleDebug
 
     - name: Subir APK generado
       uses: actions/upload-artifact@v4
