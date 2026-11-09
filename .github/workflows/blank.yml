@@ -37,8 +37,8 @@ jobs:
     - name: Configurar Gradle
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Dar permisos de ejecucion
-      run: chmod +x gradlew
+    - name: Compilar APK Modificado
+      run: gradle assembleDebug
 
     - name: Compilar APK Modificado
       run: ./gradlew assembleDebug
