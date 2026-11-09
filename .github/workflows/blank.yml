@@ -25,7 +25,8 @@ jobs:
       run: chmod +x gradlew || true
 
     - name: Compilar APK con Gradle
-      run: |
+      run: gradle assembleDebug
+
         if [ -f gradlew ]; then
           ./gradlew assembleDebug
         else
