@@ -2,7 +2,7 @@ name: Compilar APK de Prueba
 
 on:
   push:
-    branches: [ "principal" ]
+    branches: [ "principal", "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -18,20 +18,26 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Reparar Gradle Wrapper Faltante
+    - name: Fabricar Gradle Wrapper faltante desde cero
       run: |
-        gradle wrapper --gradle-version 8.2
+        mkdir -p gradle/wrapper
+        echo "distributionBase=GRADLE_USER_HOME" > gradle/wrapper/gradle-wrapper.properties
+        echo "distributionPath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+        echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.2-bin.zip" >> gradle/wrapper/gradle-wrapper.properties
+        echo "zipStoreBase=GRADLE_USER_HOME" >> gradle/wrapper/gradle-wrapper.properties
+        echo "zipStorePath=wrapper/dists" >> gradle/wrapper/gradle-wrapper.properties
+        curl -L -o gradle/wrapper/gradle-wrapper.jar https://github.com
 
-    - name: Configurar Gradle
+    - name: Configurar Gradle en el Servidor
       uses: gradle/actions/setup-gradle@v3
 
-    - name: Dar permisos de ejecucion
+    - name: Dar permisos de ejecucion al script
       run: chmod +x gradlew
 
     - name: Compilar APK con Gradle
       run: ./gradlew assembleDebug
 
-    - name: Subir APK generado
+    - name: Subir APK generado como artefacto
       uses: actions/upload-artifact@v4
       with:
         name: Mi-Isla-Dinamica-APK
